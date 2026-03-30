@@ -1,0 +1,12 @@
+你是一名软件架构师，正在为数据血缘系统创建oracle sql解析模块。这个模块根据antlr4的lexer和parser解析输入的sql（除了普通的create、insert、update、delete、select、alter语句，还包括oracle视图），从中提取数据表、字段的关系（源表、目标表之间的映射关系）。
+
+1. 创建一个springboot名字为sqlparser的多模块maven工程；
+2. 在sqlparser工程下创建springboot starter模块，名字为“springboot-plsql-parser-starter”；
+2.1. 使用antlr maven插件根据antlr4目录下的PlSqlLexer.g4和PlSqlParser.g4生成java代码；如果生成单个Parser java代码文件太大，请将其分拆成多个文件（例如，将内部class放到单独的文件中，减少Parser class的大小）
+2.2. 生成代码来解析SQL内容，返回源表、目标表的数据表和字段映射关系；
+2.3. 生成血缘数据模型的oracle和mysql建表语句，oracle库的建表语句放到db/oracle/data_lineage.sql文件; mysql库的建表语句放到db/mysql/data_lineage.sql文件;
+2.4. 使用lombok减少java代码的行数（例如，使用@Data注解，不生成getter/setter来减少代码行数）；使用hutool库来作为工具方法的主要来源（例如，其中提供了StrUtil、FileUtil、ColUtil等等工具，很好用）
+
+3. 再在sqlparser单独创建一个springboot的模块，名字为“sqlparser-demo”；
+3.1 根据examples目录下的sql文件生成demo，放到src/java/demo目录下，文件命名格式为: TestXXXX.java，“XXXX”是examples目录下sql文件的名称（去掉.sql后缀）；每个TestXXXX.java包含一个main函数可以直接运行测试。 测试结果直接输出到log里，不需要写到血缘数据库中。
+3.2 注意，上面生成的java代码需要添加中文注释，包括class、method、代码行上的注释都要有。代码基于jdk1.8
